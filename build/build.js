@@ -1002,6 +1002,7 @@ require.define("/nodes.js", function (require, module, exports, __dirname, __fil
           returnString += "else { _res += ref.toString().replace(/\\&/g,'&amp;').replace(/\\</g,'&lt;').replace(/\\>/g,'&gt;'); }}";
         }
         return returnString;
+      }
       return compile;
     }());
     return NodePrint;
