@@ -991,8 +991,17 @@ require.define("/nodes.js", function (require, module, exports, __dirname, __fil
     }
     prototype.compile = (function(){
       function compile(opts, ctx){
-        return "_res += ((_ref = " + make_expression(this.contents, ctx) + ") !== undefined && _ref !== null ? _ref : '').toString();";
-      }
+        var expression, returnString;
+        expression = make_expression(this.contents, ctx);
+        returnString = "ref = " + expression + ";";
+        returnString += "while ('function' === typeof ref) { ref = ref() };";
+        if ('()' === expression.substr(-2)) {
+          returnString += "if(ref !== null && ref !== undefined){ _res += ref.toString() }";
+        } else {
+          returnString += "if(ref !== null && ref !== undefined){ if(ref.safe === true){_res += ref.toString() }";
+          returnString += "else { _res += ref.toString().replace(/\\&/g,'&amp;').replace(/\\</g,'&lt;').replace(/\\>/g,'&gt;'); }}";
+        }
+        return returnString;
       return compile;
     }());
     return NodePrint;
